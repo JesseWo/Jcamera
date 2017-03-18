@@ -23,7 +23,6 @@ import com.example.camera.App;
 import com.example.camera.camera.CameraManager;
 import com.example.camera.fragment.ShowInfoDialog;
 import com.example.camera.rx.Rx;
-import com.example.camera.utils.BundleArgs;
 import com.example.camera.utils.Constants;
 import com.example.camera.utils.GravityManager;
 import com.example.camera.utils.LOG;
@@ -209,7 +208,7 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
     }
 
     protected boolean needRotatePicture() {
-        return getIntent().getBooleanExtra(BundleArgs.CARD, false);
+        return getIntent().getBooleanExtra(Constants.CARD, false);
     }
 
     protected int getDefaultCamera() {

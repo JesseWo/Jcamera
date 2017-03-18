@@ -12,7 +12,7 @@ import rx.Observable;
 import rx.Subscriber;
 
 /**
- * Created by wangzhenxing on 2016/12/29.
+ * Created by wangzhx on 2016/12/29.
  */
 public class CacheSubscriber<T> extends Subscriber<T> {
 

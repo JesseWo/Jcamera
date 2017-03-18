@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import java.lang.reflect.Field;
 
 /**
- * Created by xuchdeid on 2016/10/24.
+ * Created by wangzhx on 2016/10/24.
  */
 
 public class FixDialogFragment extends DialogFragment {

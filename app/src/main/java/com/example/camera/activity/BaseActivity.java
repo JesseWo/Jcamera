@@ -7,10 +7,7 @@ import com.example.camera.utils.ToastUtil;
 import com.example.camerademo.BuildConfig;
 
 /**
- * Merge ProgressActivity + BaseActivity
- * <p>
- * Created by xuchdeid on 16/1/24.
- * Modified by E-boy on 16/12/1.
+ * Created by wangzhx on 16/1/24.
  */
 public class BaseActivity extends AppCompatActivity {
 

@@ -22,7 +22,7 @@ import com.example.camerademo.R;
 import rx.functions.Action1;
 
 /**
- * Created by xuchdeid on 16/7/14.
+ * Created by wangzhx on 16/7/14.
  */
 
 public class ShowInfoDialog extends FixDialogFragment implements DialogInterface.OnKeyListener {

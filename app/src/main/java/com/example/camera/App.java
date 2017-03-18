@@ -14,14 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by xuchdeid on 4/5/2016.
- * ________________________________________
- * /~~\__/~~\__/~~~~~~\__/~~~~\_/~~~~~~~~\_
- * _/~~\/~~\__/~~\__/~~\__/~~\__/~~\_______
- * __/~~~~\___/~~\________/~~\__/~~~~~~\___
- * _/~~\/~~\__/~~\__/~~\__/~~\__/~~\_______
- * /~~\__/~~\__/~~~~~~\__/~~~~\_/~~\_______
- * ________________________________________
+ * Created by wangzhx on 4/5/2016.
  */
 public class App extends MultiDexApplication implements Application.ActivityLifecycleCallbacks {
 

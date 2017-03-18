@@ -14,7 +14,7 @@ import okhttp3.Response;
 
 /**
  * gson持久化截取保存数据
- * Created by wangzhenxing on 2016/12/29.
+ * Created by wangzhx on 2016/12/29.
  */
 public class CacheInterceptor implements Interceptor {
 

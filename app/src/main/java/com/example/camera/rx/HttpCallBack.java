@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * 成功回调处理
- * Created by wangzhenxing on 2016/12/29.
+ * Created by wangzhx on 2016/12/29.
  */
 public abstract class HttpCallBack<T> {
 

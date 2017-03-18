@@ -2,7 +2,7 @@ package com.example.camera.rx;
 
 /**
  * 自定义错误信息，统一处理返回处理
- * Created by wangzhenxing on 2016/12/30.
+ * Created by wangzhx on 2016/12/30.
  */
 public class HttpTimeException extends RuntimeException {
 

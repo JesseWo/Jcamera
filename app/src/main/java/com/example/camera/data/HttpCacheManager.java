@@ -1,7 +1,7 @@
 package com.example.camera.data;
 
 /**
- * Created by wangzhenxing on 2017/1/9.
+ * Created by wangzhx on 2017/1/9.
  */
 
 public class HttpCacheManager {

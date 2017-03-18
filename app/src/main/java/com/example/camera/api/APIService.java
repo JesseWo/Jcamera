@@ -2,7 +2,7 @@ package com.example.camera.api;
 
 
 /**
- * Created by E-boy on 2016/11/17.
+ * Created by wangzhx on 2016/11/17.
  */
 
 public interface APIService {

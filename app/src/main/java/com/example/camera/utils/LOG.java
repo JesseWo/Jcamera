@@ -3,7 +3,7 @@ package com.example.camera.utils;
 import android.util.Log;
 
 /**
- * Created by xuchdeid on 16/7/14.
+ * Created by wangzhx on 16/7/14.
  */
 
 public class LOG {

@@ -1,7 +1,7 @@
 package com.example.camera.data;
 
 /**
- * Created by wangzhenxing on 2016/12/29.
+ * Created by wangzhx on 2016/12/29.
  */
 
 public class DBManager {
