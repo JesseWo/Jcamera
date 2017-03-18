@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true"
+        android:color="@color/text_color_common_dark"/>
+    <item android:state_pressed="true"
+        android:color="@color/text_color_common_dark"/> <!-- pressed -->
+    <item android:state_focused="true"
+        android:color="@color/text_color_common_dark"/> <!-- focused -->
+    <item android:state_enabled="false"
+        android:color="@color/button_text_disable_color"/> <!-- disabled -->
+    <item android:color="@color/text_color_common_dark"/> <!-- default -->
+</selector>

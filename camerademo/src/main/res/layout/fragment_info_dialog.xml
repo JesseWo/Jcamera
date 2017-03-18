@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/dialog">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/fenqi_title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:visibility="gone"
+        tools:text="标题" />
+
+    <TextView
+        android:id="@+id/info"
+        style="@style/fenqi_info_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:textSize="@dimen/button_text_size" />
+
+    <Button
+        android:id="@+id/btn_yes"
+        style="@style/button_style"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:text="@android:string/yes" />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        style="@style/button_style"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="15dp"
+        android:text="@android:string/no" />
+
+</LinearLayout>
