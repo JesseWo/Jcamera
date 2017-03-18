@@ -1,22 +1,7 @@
-/*
- * Copyright (C) 2008 ZXing authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.wzx.camera.camera;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -29,54 +14,38 @@ import com.wzx.camera.utils.LOG;
 
 import java.io.IOException;
 
-/**
- * This object wraps the Camera service object and expects to be the only one talking to it. The
- * implementation encapsulates the steps needed to take preview-sized images, which are used for
- * both preview and decoding.
- */
 public final class CameraManager {
 
     private static final String TAG = CameraManager.class.getSimpleName();
 
-    private static CameraManager cameraManager;
-
     private final CameraConfigurationManager configManager;
+
     private Camera camera;
     private boolean previewing;
     private boolean mFlashLight = false;
-    /**
-     * Preview frames are delivered here, which we pass on to the registered handler. Make sure to
-     * clear the handler so it will only receive one message.
-     */
+
     private final PreviewCallback previewCallback;
-    /**
-     * Autofocus callbacks arrive here, and are dispatched to the Handler which requested them.
-     */
     private final AutoFocusCallback autoFocusCallback;
 
-    /**
-     * Initializes this static object with the Context of the calling Activity.
-     *
-     * @param context The Activity which wants to use the camera.
-     */
+    private static Context sContext;
+    private volatile static CameraManager cameraManager;
     public static void init(Context context) {
-        if (cameraManager == null) {
-            cameraManager = new CameraManager();
-        }
+        sContext = context;
     }
 
-    /**
-     * Gets the CameraManager singleton instance.
-     *
-     * @return A reference to the CameraManager singleton.
-     */
     public static CameraManager get() {
+        if (cameraManager == null) {
+            synchronized (CameraManager.class) {
+                if (cameraManager == null) {
+                    cameraManager = new CameraManager();
+                }
+            }
+        }
         return cameraManager;
     }
 
     private CameraManager() {
         this.configManager = new CameraConfigurationManager();
-
         previewCallback = new PreviewCallback(configManager);
         autoFocusCallback = new AutoFocusCallback();
     }
@@ -113,12 +82,15 @@ public final class CameraManager {
             configManager.initFromCameraParameters(camera, holder);
 
             configManager.setDesiredCameraParameters(camera);
-            //FIXME
-            //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-            //if (prefs.getBoolean(PreferencesActivity.KEY_FRONT_LIGHT, false)) {
-            //    FlashlightManager.enableFlashlight();
-            //}
             FlashlightManager.enableFlashlight();
+        }
+    }
+
+    public void closeDriver() {
+        if (camera != null) {
+            FlashlightManager.disableFlashlight();
+            camera.release();
+            camera = null;
         }
     }
 
@@ -132,24 +104,6 @@ public final class CameraManager {
         this.cameraFacingType = type;
     }
 
-    public Camera getCamera() {
-        return camera;
-    }
-
-    /**
-     * Closes the camera driver if still in use.
-     */
-    public void closeDriver() {
-        if (camera != null) {
-            FlashlightManager.disableFlashlight();
-            camera.release();
-            camera = null;
-        }
-    }
-
-    /**
-     * Asks the camera hardware to begin drawing preview frames to the screen.
-     */
     public void startPreview() {
         if (camera != null && !previewing) {
             camera.startPreview();
@@ -157,9 +111,6 @@ public final class CameraManager {
         }
     }
 
-    /**
-     * Tells the camera to stop drawing preview frames.
-     */
     public void stopPreview() {
         if (camera != null && previewing) {
             camera.stopPreview();
@@ -179,6 +130,18 @@ public final class CameraManager {
         }
     }
 
+    public void requestAutoFocus(Handler handler, int message) {
+        if (camera != null && previewing) {
+            autoFocusCallback.setHandler(handler, message);
+            try {
+                camera.autoFocus(autoFocusCallback);
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+
+            }
+        }
+    }
+
     /**
      * A single preview frame will be returned to the handler supplied. The data will arrive as byte[]
      * in the message.obj field, with width and height encoded as message.arg1 and message.arg2,
@@ -192,20 +155,6 @@ public final class CameraManager {
             previewCallback.setHandler(handler, message);
             camera.setOneShotPreviewCallback(previewCallback);
 
-        }
-    }
-
-    /**
-     * Asks the camera hardware to perform an autofocus.
-     *
-     * @param handler The Handler to notify when the autofocus completes.
-     * @param message The message to deliver.
-     */
-    public void requestAutoFocus(Handler handler, int message) {
-        if (camera != null && previewing) {
-            autoFocusCallback.setHandler(handler, message);
-            //Log.d(TAG, "Requesting auto-focus callback");
-            camera.autoFocus(autoFocusCallback);
         }
     }
 
@@ -258,6 +207,14 @@ public final class CameraManager {
         surfaceView.requestLayout();
     }
 
+    /**
+     * 闪光灯
+     * @return
+     */
+    public boolean isSupportFlashLight() {
+        return sContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
+    }
+
     public void setFlashLight(boolean light) {
         if (camera != null) {
             mFlashLight = light;
@@ -275,11 +232,15 @@ public final class CameraManager {
         return mFlashLight;
     }
 
-    public boolean isSupportFlashLight() {
-        return camera != null && camera.getParameters().getSupportedFlashModes() != null;
+    /**
+     * 自动对焦
+     * @return
+     */
+    public boolean isSupportAutoFocus() {
+        return sContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_AUTOFOCUS);
     }
 
-    public boolean isSupportAutoFocus() {
-        return false;
+    public Camera getCamera() {
+        return camera;
     }
 }

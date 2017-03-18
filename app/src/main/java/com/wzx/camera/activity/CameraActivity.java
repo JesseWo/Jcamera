@@ -11,13 +11,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -52,7 +49,7 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
     private static final int REQUEST_PREVIEW = 2;
 
     private SurfaceView mPreview;
-    private Button mCapture;
+    private ImageView mCapture;
 
     protected String savePicturePath;
 
@@ -68,11 +65,12 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
     private ImageView ivBg;
     private static final int ANIM_DURATION = 800;
     private ImageView ivPreview;
-    private Button btnSwitchCamera;
+    private ImageView ivSwitchCamera;
     private SimpleDateFormat sdf;
     private AnimatorSet animatorSet;
     private boolean isSwitchCamera;
     private ImageView ivCapturePreview;
+    private ImageView ivFlash;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +90,6 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
         initView();
         initEvent();
         mAutoFocusHandle = new AutoFocusHandle(this);
-        CameraManager.init(this);
         hasSurface = false;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         CameraManager.get().setCameraFacingType(faceType);
@@ -101,7 +98,7 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
         originScreenLight = ScreenUtil.getScreenBrightness(this);
         isAutoBrightness = ScreenUtil.isAutoBrightness(this);
         //重力感应器初始化
-        GravityManager.getInstance().init(this, ivPreview, btnSwitchCamera);
+        GravityManager.getInstance().init(this, ivPreview, ivSwitchCamera, ivFlash);
     }
 
     @Override
@@ -123,38 +120,6 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
         super.onPause();
         closeCamera();
         GravityManager.getInstance().unregister();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuItem flashItem = menu.add(1, MENU_ITEM_ID_FLASH, Menu.NONE, "闪光灯");
-        flashItem.setIcon(R.mipmap.flash);
-        flashItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        flashItem.setVisible(CameraManager.get().isSupportFlashLight());
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int type = CameraManager.get().getCameraFacingType();
-        if (item.getItemId() == MENU_ITEM_ID_FLASH) {
-            // flash light
-            switch (type) {
-                case Camera.CameraInfo.CAMERA_FACING_FRONT:
-                    //调高屏幕亮度
-                    isScreenLightClosed = !isScreenLightClosed;
-                    ScreenUtil.setLight(this, isScreenLightClosed ? 255 : originScreenLight);
-                    break;
-                case Camera.CameraInfo.CAMERA_FACING_BACK:
-                    //开闪光灯
-                    boolean light = !CameraManager.get().isFlashLight();
-                    CameraManager.get().setFlashLight(light);
-                    if (debug)
-                        LOG.d(TAG, "flash light " + light);
-                    break;
-            }
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void initAnim(ImageView iv) {
@@ -190,20 +155,38 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
     }
 
     private void initView() {
-        setTitle("JCamera");
         mPreview = (SurfaceView) findViewById(R.id.preview);
-        mCapture = (Button) findViewById(R.id.capture);
-        btnSwitchCamera = (Button) findViewById(R.id.btn_transform);
+        mCapture = (ImageView) findViewById(R.id.capture);
+        ivSwitchCamera = (ImageView) findViewById(R.id.btn_transform);
         ivBg = (ImageView) findViewById(R.id.capture_bg);
         ivCapturePreview = (ImageView) findViewById(R.id.capture_preview);
         ivPreview = (ImageView) findViewById(R.id.iv_preview);
+        ivFlash = (ImageView) findViewById(R.id.iv_flash);
+        ivFlash.setVisibility(getCameraManager().isSupportFlashLight() ? View.VISIBLE : View.GONE);
     }
 
     private void initEvent() {
         Rx.clicks(mCapture, v -> takePicture());
-        Rx.clicks(btnSwitchCamera, v -> switchCamera());
+        Rx.clicks(ivSwitchCamera, v -> switchCamera());
         Rx.clicks(mPreview, v -> AutoFocusOnce());
         Rx.clicks(ivPreview, v -> previewBigImg());
+        Rx.clicks(ivFlash, v -> {
+            int type = CameraManager.get().getCameraFacingType();
+            switch (type) {
+                case Camera.CameraInfo.CAMERA_FACING_FRONT:
+                    //调高屏幕亮度
+                    isScreenLightClosed = !isScreenLightClosed;
+                    ScreenUtil.setLight(this, isScreenLightClosed ? 255 : originScreenLight);
+                    break;
+                case Camera.CameraInfo.CAMERA_FACING_BACK:
+                    //开闪光灯
+                    boolean light = !CameraManager.get().isFlashLight();
+                    CameraManager.get().setFlashLight(light);
+                    if (debug)
+                        LOG.d(TAG, "flash light " + light);
+                    break;
+            }
+        });
         initAnim(ivCapturePreview);
     }
 
@@ -320,17 +303,7 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
     }
 
     private void previewBigImg() {
-        boolean isModify = getIntent().getBooleanExtra(Constants.IS_MODIFY, false);
-        if (isModify) {
-            //重新拍摄
-            Intent intent = new Intent();
-            intent.putExtra(Constants.IMG_PATH, savePicturePath);
-            setResult(RESULT_OK, intent);
-            finish();
-        } else {
-            //首次拍摄
-            startActivityForResult(ImgPreviewActivity.getNewIntent(savePicturePath), REQUEST_PREVIEW);
-        }
+        startActivityForResult(ImgPreviewActivity.getNewIntent(savePicturePath), REQUEST_PREVIEW);
     }
 
     public CameraManager getCameraManager() {

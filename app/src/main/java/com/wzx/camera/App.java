@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.support.multidex.MultiDexApplication;
 
 import com.squareup.otto.Bus;
+import com.wzx.camera.camera.CameraManager;
 import com.wzx.camera.utils.LOG;
 
 import java.io.File;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 public class App extends MultiDexApplication implements Application.ActivityLifecycleCallbacks {
 
     protected static Context sApplicationContext;
-    private static App sApp;
     private static Bus eventBus;
 
     private ArrayList<Activity> mActivityList;
@@ -28,19 +28,16 @@ public class App extends MultiDexApplication implements Application.ActivityLife
     public void onCreate() {
         super.onCreate();
         sApplicationContext = getApplicationContext();
-        sApp = this;
         eventBus = new Bus();
 
         mActivityList = new ArrayList<>();
         registerActivityLifecycleCallbacks(this);
+        //相机初始化
+        CameraManager.init(this);
     }
 
     public static Context getInstance() {
         return sApplicationContext;
-    }
-
-    public static App getApp() {
-        return sApp;
     }
 
     public static Bus getEventBus() {

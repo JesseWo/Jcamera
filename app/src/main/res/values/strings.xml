@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">JCamera</string>
     <string name="front_camera">自拍</string>
+    <string name="scan_qr">扫一扫</string>
     <string name="back_camera">后置镜头</string>
     <string name="gallery">图库</string>
     <string name="about">关于Jcamera</string>

@@ -5,6 +5,10 @@
         icon="&#xe072;"
         android:title="@string/front_camera" />
     <menu
+        data="jcamera://com.wzx.camera/qr"
+        icon="&#xe071;"
+        android:title="@string/scan_qr" />
+    <menu
         data="jcamera://com.wzx.camera/gallery"
         icon="&#xe05d;"
         android:title="@string/gallery" />

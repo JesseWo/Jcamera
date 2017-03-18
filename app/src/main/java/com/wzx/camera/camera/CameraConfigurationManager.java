@@ -47,6 +47,9 @@ final class CameraConfigurationManager {
     private int previewMax = 1280;
     private int previewMin = 800;
 
+    private static final int DEFAULT_PREVIEW_WIDTH = 1920;
+    private static final int DEFAULT_PREVIEW_HEIGHT = 1080;
+
     CameraConfigurationManager() {
     }
 
@@ -64,7 +67,7 @@ final class CameraConfigurationManager {
         screenResolution = new Point(rect.width(), rect.height());
         LOG.d(TAG, "Screen resolution: " + screenResolution);
         //cameraResolution = getCameraResolution(parameters, screenResolution);
-        cameraResolution = getMaxValue(parameters.getSupportedPreviewSizes());
+        cameraResolution = findBestPreviewSizeValue(parameters.getSupportedPreviewSizes(), screenResolution);
         cameraPictureSize = getMaxValue(parameters.getSupportedPictureSizes());
 
         float scaleX = (float) screenResolution.x / (float) cameraResolution.y;
@@ -138,82 +141,22 @@ final class CameraConfigurationManager {
         return previewFormatString;
     }
 
-    private Point getCameraResolution(Camera.Parameters parameters, Point screenResolution) {
-
-        String previewSizeValueString = parameters.get("preview-size-values");
-        // saw this on Xperia
-        if (previewSizeValueString == null) {
-            previewSizeValueString = parameters.get("preview-size-value");
-        }
-
-        Point cameraResolution = null;
-
-        if (previewSizeValueString != null) {
-            LOG.d(TAG, "preview-size-values parameter: " + previewSizeValueString);
-            cameraResolution = findBestPreviewSizeValue(previewSizeValueString, screenResolution);
-        } else {
-            LOG.d(TAG, "preview-size-values parameter null");
-        }
-
-        if (cameraResolution == null) {
-            // Ensure that the camera resolution is a multiple of 8, as the screen may not be.
-            cameraResolution = new Point((screenResolution.x >> 3) << 3, (screenResolution.y >> 3) << 3);
-        }
-
-        return cameraResolution;
-    }
-
-    private Point findBestPreviewSizeValue(CharSequence previewSizeValueString, Point screenResolution) {
-        int bestX = 0;
-        int bestY = 0;
-        int maxX = 0;
-        int maxY = 0;
-        int diff = Integer.MAX_VALUE;
-        for (String previewSize : COMMA_PATTERN.split(previewSizeValueString)) {
-            previewSize = previewSize.trim();
-            LOG.d(TAG, "findBestPreviewSizeValue " + previewSize);
-            int dimPosition = previewSize.indexOf('x');
-            if (dimPosition < 0) {
-                LOG.d(TAG, "Bad preview-size: " + previewSize);
-                continue;
-            }
-
-            int newX;
-            int newY;
-            try {
-                newX = Integer.parseInt(previewSize.substring(0, dimPosition));
-                newY = Integer.parseInt(previewSize.substring(dimPosition + 1));
-                if (newX > maxX) {
-                    maxX = newX;
-                    maxY = newY;
-                }
-                if (newX > previewMax || newX < previewMin) {
-                    continue;
-                }
-            } catch (NumberFormatException nfe) {
-                LOG.d(TAG, "Bad preview-size: " + previewSize);
-                continue;
-            }
-
-            int newDiff = Math.abs(newX - screenResolution.x) + Math.abs(newY - screenResolution.y);
-            if (newDiff == 0) {
-                bestX = newX;
-                bestY = newY;
-                break;
-            } else if (newDiff < diff) {
-                bestX = newX;
-                bestY = newY;
-                diff = newDiff;
+    private Point findBestPreviewSizeValue(List<Camera.Size> sizes, Point screenResolution) {
+        //倒序排列
+        Collections.sort(sizes, (Camera.Size size1, Camera.Size size2) -> size2.width - size1.width);
+        for (Camera.Size size : sizes) {
+            int newX = size.width;
+            int newY = size.height;
+            LOG.d(TAG, "width: " + newX + ", height: " + newY);
+//            if (newX == DEFAULT_PREVIEW_WIDTH && newY == DEFAULT_PREVIEW_HEIGHT) {
+//                return new Point(newX, newY);
+//            }
+            if (newX / newY == 16 / 9) {
+                return new Point(newX, newY);
             }
         }
-
-        if (bestX > 0 && bestY > 0) {
-            LOG.d(TAG, "bestX " + bestX + " bestY " + bestY);
-            return new Point(bestX, bestY);
-        } else {
-            LOG.d(TAG, "maxX " + maxX + " maxY " + maxY);
-            return new Point(maxX, maxY);
-        }
+        Camera.Size maxSize = sizes.get(0);
+        return new Point(maxSize.width, maxSize.height);
     }
 
     private Point findBestPictureSizeValue(List<Camera.Size> imageSizes, Point screenResolution) {

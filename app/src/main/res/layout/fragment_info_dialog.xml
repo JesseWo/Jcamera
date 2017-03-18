@@ -5,7 +5,7 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/fenqi_title_text"
+        style="@style/title_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/info"
-        style="@style/fenqi_info_text"
+        style="@style/info_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/activity_horizontal_margin"

@@ -10,6 +10,20 @@
         android:layout_height="match_parent"
         android:layout_gravity="center" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="20dp">
+
+        <ImageView
+            android:id="@+id/iv_flash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/flash"
+            android:tint="@color/colorAccent" />
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/capture_bg"
         android:layout_width="match_parent"
@@ -21,31 +35,38 @@
         android:id="@+id/capture_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"/>
+        android:scaleType="fitXY" />
 
-    <Button
-        android:id="@+id/btn_transform"
-        android:layout_width="@dimen/btn_tranform_size"
-        android:layout_height="@dimen/btn_tranform_size"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/btn_margin"
-        android:layout_marginLeft="@dimen/btn_margin"
-        android:background="@mipmap/camera_transform" />
+        android:orientation="horizontal"
+        android:padding="20dp">
 
-    <Button
-        android:id="@+id/capture"
-        android:layout_width="@dimen/btn_capture_size"
-        android:layout_height="@dimen/btn_capture_size"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="@dimen/btn_margin"
-        android:background="@drawable/btn_capture" />
+        <ImageView
+            android:id="@+id/btn_transform"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/btn_tranform_size"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@mipmap/camera_transform"
+            android:tint="@color/colorAccent" />
 
-    <ImageView
-        android:id="@+id/iv_preview"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_gravity="bottom|right"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="@dimen/btn_margin" />
+        <ImageView
+            android:id="@+id/capture"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/btn_capture_size"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:src="@drawable/btn_capture" />
+
+        <ImageView
+            android:id="@+id/iv_preview"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1" />
+    </LinearLayout>
 
 </FrameLayout>
