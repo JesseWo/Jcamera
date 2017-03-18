@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launcher_menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <menu
+        data="jcamera://com.wzx.camera/front"
+        icon="&#xe005;"
+        android:title="@string/front_camera" />
+    <menu
+        data="jcamera://com.wzx.camera/back"
+        icon="&#xe006;"
+        android:title="@string/back_camera" />
+    <menu
+        data="jcamera://com.wzx.camera/about"
+        icon="&#xe006;"
+        android:title="@string/about" />
+</launcher_menu>
