@@ -6,9 +6,11 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
@@ -76,14 +78,24 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture);
-
+        int faceType = Camera.CameraInfo.CAMERA_FACING_BACK;
+        Intent intent = getIntent();
+        if (intent != null) {
+            Uri uri = intent.getData();
+            if (uri != null) {
+                String path = uri.getPath();
+                if (!TextUtils.isEmpty(path) && path.equals("/front")) {
+                    faceType = Camera.CameraInfo.CAMERA_FACING_FRONT;
+                }
+            }
+        }
         initView();
         initEvent();
         mAutoFocusHandle = new AutoFocusHandle(this);
         CameraManager.init(this);
         hasSurface = false;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        CameraManager.get().setCameraFacingType(getDefaultCamera());
+        CameraManager.get().setCameraFacingType(faceType);
 
         //记录屏幕亮度
         originScreenLight = ScreenUtil.getScreenBrightness(this);
@@ -209,10 +221,6 @@ public class CameraActivity extends BaseActivity implements SurfaceHolder.Callba
 
     protected boolean needRotatePicture() {
         return getIntent().getBooleanExtra(Constants.CARD, false);
-    }
-
-    protected int getDefaultCamera() {
-        return getIntent().getIntExtra(Constants.FACE, Camera.CameraInfo.CAMERA_FACING_BACK);
     }
 
     /**

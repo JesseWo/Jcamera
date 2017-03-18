@@ -48,26 +48,28 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="com.meizu.media.reader"
+                    android:host="com.wzx.camera"
                     android:path="/front"
                     android:scheme="jcamera" />
                 <data
-                    android:host="com.meizu.media.reader"
-                    android:path="/back"
+                    android:host="com.wzx.camera"
+                    android:path="/gallery"
                     android:scheme="jcamera" />
                 <data
-                    android:host="com.meizu.media.reader"
+                    android:host="com.wzx.camera"
                     android:path="/about"
                     android:scheme="jcamera" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.wzx.camera.activity.ImgPreviewActivity"
+            android:name="activity.ImgPreviewActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
-            <meta-data
-                android:name="android.3dtouch.launcher_menu"
-                android:resource="@xml/launcher_menu" />
+
         </activity>
+
+        <meta-data
+            android:name="android.3dtouch.launcher_menu"
+            android:resource="@xml/launcher_menu" />
     </application>
 
 </manifest>
