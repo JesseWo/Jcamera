@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#434343</color>
+    <color name="colorPrimaryDark">#434343</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="button_normal_color">#FFE000</color>
+    <color name="button_pressed_color">#fac400</color>
+    <color name="button_disable_color">#fff8bf</color>
+    <color name="button_text_normal_color">#333333</color>
+    <color name="button_text_disable_color">#666666</color>
+
+    <!--3.0-->
+    <color name="line_color">#cecece</color>
+
+    <!--common text color-->
+    <color name="text_color_common_dark">#333333</color>
+    <color name="text_color_light">#CECECE</color>
+    <!--clickable text color-->
+    <color name="text_color_click">#4990E2</color>
+    <!--提醒类字体颜色-->
+    <color name="text_color_notice">#ff0000</color>
+    <!--提示类字体颜色-->
+    <color name="text_color_tip">#75df41</color>
+    <!--bottom tab text color-->
+    <color name="text_color_tab">#646464</color>
+    <!--补充说明类字体颜色-->
+    <color name="text_color_extra">#b8b8b8</color>
+    <!--editText hint color-->
+    <color name="text_color_hint">#CECECE</color>
+
+    <!--全局背景颜色-->
+    <color name="bg_color_common">#f7f7f7</color>
+    <color name="bg_color_white">#ffffff</color>
+
+    <color name="btn_capture_normal">#6c332a2a</color>
+    <color name="btn_capture_pressed">#36332a2a</color>
+    <color name="btn_capture_ring">#8dffffff</color>
+    <color name="img_preview_bg">#000</color>
 </resources>
